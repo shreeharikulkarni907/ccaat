@@ -1,0 +1,28 @@
+# verison: '3.8' #Docker Version
+services:
+   www:
+    image: php:apache
+    volumes:
+      - "./:/var/www/html" #Sync Projecr dir with container dir
+    ports:
+      - 80:80
+      - 443:443 #for futute referenceṭ
+
+   db: 
+     image: mysql:latest
+     environment:
+      - MYSQL_DATABASE=php_docker
+      - MYSQL_USER=php_docker
+      - MYSQL_PASSWORD=password # this should live in a env var
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1 # equivalent to True
+     volumes:
+      - "./db:/docker-entrypoint-initdb.d" # this is how we persist a sql db even when container 
+
+      
+   phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8001:80
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
